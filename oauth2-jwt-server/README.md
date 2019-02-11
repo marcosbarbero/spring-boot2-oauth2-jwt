@@ -445,7 +445,7 @@ security:
 
 ### Resource Server Configuration
 
-[Follow this link](../resource-server-jwt).
+[Follow this link](../oauth2-jwt-resource).
 
 ### Testing all together
 
