@@ -16,9 +16,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final DataSource dataSource;
 
-    private PasswordEncoder passwordEncoder;
-    private UserDetailsService userDetailsService;
-
     public WebSecurityConfiguration(final DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -37,19 +34,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        if (passwordEncoder == null) {
-            passwordEncoder = DefaultPasswordEncoderFactories.createDelegatingPasswordEncoder();
-        }
-        return passwordEncoder;
+        return DefaultPasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        if (userDetailsService == null) {
-            userDetailsService = new JdbcDaoImpl();
-            ((JdbcDaoImpl) userDetailsService).setDataSource(dataSource);
-        }
+        JdbcDaoImpl userDetailsService = new JdbcDaoImpl();
+        userDetailsService.setDataSource(dataSource);
         return userDetailsService;
     }
 

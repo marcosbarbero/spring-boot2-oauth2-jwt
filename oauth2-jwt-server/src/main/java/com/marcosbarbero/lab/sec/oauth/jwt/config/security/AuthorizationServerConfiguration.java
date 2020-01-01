@@ -33,9 +33,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private final SecurityProperties securityProperties;
     private final UserDetailsService userDetailsService;
 
-    private JwtAccessTokenConverter jwtAccessTokenConverter;
-    private TokenStore tokenStore;
-
     public AuthorizationServerConfiguration(final DataSource dataSource, final PasswordEncoder passwordEncoder,
                                             final AuthenticationManager authenticationManager, final SecurityProperties securityProperties,
                                             final UserDetailsService userDetailsService) {
@@ -48,10 +45,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Bean
     public TokenStore tokenStore() {
-        if (tokenStore == null) {
-            tokenStore = new JwtTokenStore(jwtAccessTokenConverter());
-        }
-        return tokenStore;
+        return new JwtTokenStore(jwtAccessTokenConverter());
     }
 
     @Bean
@@ -67,14 +61,10 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
-        if (jwtAccessTokenConverter != null) {
-            return jwtAccessTokenConverter;
-        }
-
         SecurityProperties.JwtProperties jwtProperties = securityProperties.getJwt();
         KeyPair keyPair = keyPair(jwtProperties, keyStoreKeyFactory(jwtProperties));
 
-        jwtAccessTokenConverter = new JwtAccessTokenConverter();
+        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
         jwtAccessTokenConverter.setKeyPair(keyPair);
         return jwtAccessTokenConverter;
     }
